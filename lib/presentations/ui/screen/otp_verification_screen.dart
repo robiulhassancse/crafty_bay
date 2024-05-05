@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crafty_bay/presentations/ui/screen/complete_profile_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:crafty_bay/presentations/ui/widgets/app_logo.dart';
@@ -14,11 +16,36 @@ class OtpVerificationScreen extends StatefulWidget {
 
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
+
+  int resendTime = 10;
+  late Timer countdownTimer;
+  @override
+  void initState() {
+    startTimer();
+    super.initState();
+  }
+
+  startTimer() {
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        resendTime = resendTime - 1;
+      });
+      if (resendTime < 1) {
+        countdownTimer.cancel();
+      }
+    });
+  }
+  stopTimer(){
+    if(countdownTimer.isActive){
+      countdownTimer.cancel();
+    }
+  }
+
   TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -65,26 +92,33 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                   child: const Text('Next'),
                 ),
                 const SizedBox(height: 20,),
-               RichText(text: const TextSpan(
+               RichText(text:  TextSpan(
                  children: [
-                   TextSpan(
+                   const TextSpan(
                      text: 'This code will expire in ',
                      style: TextStyle(
                        color: Colors.grey,
                      )
                    ),
+
                    TextSpan(
-                     text: '120s',
-                     style: TextStyle(
+                     text: '$resendTime\s',
+                     style: const TextStyle(
                        color: AppColors.primaryColor,
                      )
                    ),
                  ]
                ),),
                 const SizedBox(height: 8,),
-                const Text('Resend Code',style: TextStyle(
-                  color: Colors.grey,
-                ),)
+            resendTime ==0 ? InkWell(
+                onTap: (){
+                  resendTime=10;
+                  startTimer();
+                },child: const Text('Resend Code',style: TextStyle(color: Colors.grey,fontSize: 16),),
+              ):const SizedBox(),
+
+                // resendTime != 0 ? const SizedBox() : const SizedBox(),
+
               ],
             ),
           ),
