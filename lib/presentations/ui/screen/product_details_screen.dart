@@ -1,9 +1,11 @@
+import 'package:crafty_bay/presentations/ui/screen/create_review_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:crafty_bay/presentations/ui/widgets/color_picker.dart';
 import 'package:crafty_bay/presentations/ui/widgets/custom_stepper.dart';
 import 'package:crafty_bay/presentations/ui/widgets/products_carosul_slider.dart';
 import 'package:crafty_bay/presentations/ui/widgets/size_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen({super.key});
@@ -159,7 +161,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ],
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.offAll(()=>const CreateReviewScreen());
+          },
           child: const Text(
             'Reviews',
             style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
