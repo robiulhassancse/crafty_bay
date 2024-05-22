@@ -1,8 +1,8 @@
 import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:crafty_bay/data/model/category/category_data.dart';
+import 'package:crafty_bay/presentations/state_holder/category_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/home_slider_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
-import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:crafty_bay/presentations/ui/utility/assets_path.dart';
 import 'package:crafty_bay/presentations/ui/widgets/appbar_icon_button.dart';
 import 'package:crafty_bay/presentations/ui/widgets/category_item.dart';
@@ -15,7 +15,6 @@ import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -64,12 +63,32 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                     height: 220,
 
-                    child: const HomeCarosulSlider()),
-                SectionHeader(title: 'All Categories', onTabSeeAll: () { },),
+                    child: GetBuilder<HomeSliderController>(
+                      builder: (homeSilderController) {
+                        if(homeSilderController.getHomeSliderInProgress){
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return  HomeCarosulSlider(sliderList: homeSilderController.sliderList,);
+                      }
+                    )),
+                SectionHeader(title: 'All Categories', onTabSeeAll: () {
+                  Get.find<MainBottomNavBarController>().gotoCategoryScreen();
+                },),
                 const SizedBox(
                   height: 8,
                 ),
-                _buildCategoryItem(),
+                GetBuilder<CategoryController>(
+                  builder: (categoryController) {
+                    if(categoryController.getCategoryInProgress){
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return _buildCategoryItem(categoryController.categoryList);
+                  }
+                ),
                 SectionHeader(title: 'Popular', onTabSeeAll: (){}),
                 _buildProductCartList(),
                 SectionHeader(title: 'Special', onTabSeeAll: (){}),
@@ -84,16 +103,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildCategoryItem() {
+  Widget _buildCategoryItem(List<CategoryData> categoryList) {
     return InkWell(
       onTap: (){},
       child: SizedBox(
                 height: 110,
                 child: ListView.separated(
-                  itemCount: 10,
+                  itemCount: categoryList.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context,index){
-                  return  const CategoryItem();
+                  return  CategoryItem(categoryData: categoryList[index],);
                 }, separatorBuilder: (BuildContext context, int index) {
                     return const SizedBox(width: 8,);
                 },),

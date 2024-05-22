@@ -1,3 +1,5 @@
+import 'package:crafty_bay/presentations/state_holder/category_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/home_slider_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
 import 'package:crafty_bay/presentations/ui/screen/cart_list_screen.dart';
 import 'package:crafty_bay/presentations/ui/screen/category_list_screen.dart';
@@ -16,13 +18,19 @@ class MainBottomNavBarScreen extends StatefulWidget {
 
 class _MainBottomNavBarScreenState extends State<MainBottomNavBarScreen> {
    final MainBottomNavBarController _navBarController = Get.find<MainBottomNavBarController>();
+   // final HomeSliderController homeSliderController = Get.find<HomeSliderController>();
   final List<Widget>_screen =[
     const HomeScreen(),
     const CategoryListScreen(),
     const CardListScreen(),
     const WishListScreen(),
   ];
-
+@override
+  void initState() {
+    super.initState();
+    Get.find<HomeSliderController>().getHomeSlider();
+    Get.find<CategoryController>().getCategory();
+  }
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MainBottomNavBarController>(

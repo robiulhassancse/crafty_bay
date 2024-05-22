@@ -1,3 +1,4 @@
+import 'package:crafty_bay/data/model/category/category_data.dart';
 import 'package:crafty_bay/presentations/ui/screen/product_list_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -5,13 +6,15 @@ import 'package:get/get.dart';
 
 class CategoryItem extends StatelessWidget {
   const CategoryItem({
-    super.key,
+    super.key, required this.categoryData,
   });
+  final CategoryData categoryData;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Get.to(()=> const ProductListScreen(categoryName: 'Electronics'));
+        Get.to(()=> ProductListScreen(categoryName: categoryData.categoryName ?? ''),);
       },
       child: Column(
         children: [
@@ -21,10 +24,10 @@ class CategoryItem extends StatelessWidget {
                 color: AppColors.primaryColor.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16)
             ),
-            child: const Icon(Icons.desktop_windows_outlined,color: AppColors.primaryColor,size: 50,),
+            child: Image.network(categoryData.categoryImg ?? '',height: 50, width: 50,),
           ),
           const SizedBox(height: 4,),
-          const Text('Electronics',style: TextStyle(
+           Text(categoryData.categoryName ?? '',style: const TextStyle(
             color: AppColors.primaryColor,
             fontSize: 16,
             letterSpacing: 0.5,

@@ -12,4 +12,7 @@ class MainBottomNavBarController extends GetxController{
 void backToHomeScreen(){
     changeIndex(0);
 }
+  void gotoCategoryScreen(){
+    changeIndex(1);
+  }
 }

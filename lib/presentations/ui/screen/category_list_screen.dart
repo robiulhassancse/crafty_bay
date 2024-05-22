@@ -1,3 +1,4 @@
+import 'package:crafty_bay/presentations/state_holder/category_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
 import 'package:crafty_bay/presentations/ui/widgets/category_item.dart';
 import 'package:flutter/material.dart';
@@ -36,18 +37,30 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
             ],
           ),
         ),
-        body: GridView.builder(
-            itemCount: 16,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          // crossAxisSpacing: 2,
-          mainAxisSpacing: 4,
-        ), itemBuilder: (context,index){
-          return const FittedBox(child: Padding(
-            padding: EdgeInsets.all(8.0),
-            child: CategoryItem(),
-          ));
-        }),
+        body: GetBuilder<CategoryController>(
+          builder: (categoryController) {
+            if(categoryController.getCategoryInProgress){
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return RefreshIndicator(
+              onRefresh: () async=> categoryController.getCategory(),
+              child: GridView.builder(
+                  itemCount: categoryController.categoryList.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                // crossAxisSpacing: 2,
+                mainAxisSpacing: 4,
+              ), itemBuilder: (context,index){
+                return FittedBox(child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CategoryItem(categoryData: categoryController.categoryList[index],),
+                ));
+              }),
+            );
+          }
+        ),
       ),
     );
   }
