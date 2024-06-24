@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 
 class HomeSliderController extends GetxController{
   bool _getHomeSlidersInProgress = false;
-  String _message='';
+  String _errorMessage='';
   List<SliderData> _sliderList=[];
   bool get getHomeSliderInProgress =>_getHomeSlidersInProgress;
-  String get message =>_message;
+  String get errorMessage =>_errorMessage;
   List <SliderData> get sliderList=>_sliderList;
 
   Future<bool> getHomeSlider()async{
@@ -21,7 +21,7 @@ class HomeSliderController extends GetxController{
     if(response.isSuccess){
       _sliderList=SliderModel.fromJson(response.responseData).data ?? [];
     }else{
-        _message= response.errorMessage;
+        _errorMessage= response.errorMessage;
     }
     _getHomeSlidersInProgress = false;
     update();

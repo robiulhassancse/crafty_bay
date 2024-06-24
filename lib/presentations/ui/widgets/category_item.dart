@@ -14,7 +14,7 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Get.to(()=> ProductListScreen(categoryName: categoryData.categoryName ?? ''),);
+        Get.to(()=> ProductListScreen(categoryName: categoryData.categoryName ?? '', categoryId: categoryData.id!),);
       },
       child: Column(
         children: [

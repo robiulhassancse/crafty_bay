@@ -1,3 +1,4 @@
+import 'package:crafty_bay/data/model/category/product.dart';
 import 'package:crafty_bay/presentations/ui/screen/product_details_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +7,11 @@ import 'package:get/get.dart';
 class ProductCart extends StatelessWidget {
   const ProductCart({
     super.key,
-    this.showAddToWishList = true,
+    this.showAddToWishList = true, required this.product,
   });
 
   final bool showAddToWishList;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -31,23 +33,22 @@ class ProductCart extends StatelessWidget {
                 height: 90,
                 decoration: BoxDecoration(
                     color: AppColors.primaryColor.withOpacity(0.1),
-                    image: const DecorationImage(
-                        image: NetworkImage(
-                            'https://parspng.com/wp-content/uploads/2023/02/shoespng.parspng.com_.png')),
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(8),
                       topLeft: Radius.circular(8),
-                    )),
+                    ),
+                ),
+                child: Image.network(product.image ?? ''),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    const Text(
-                      'New Nike Shoe 80657',
+                     Text(
+                     product.title ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.grey,
                       ),
@@ -55,9 +56,9 @@ class ProductCart extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '\$100',
-                          style: TextStyle(
+                         Text(
+                          '\$${product.price}',
+                          style: const TextStyle(
                             color: AppColors.primaryColor,
                             fontWeight: FontWeight.w500,
                           ),
@@ -70,7 +71,7 @@ class ProductCart extends StatelessWidget {
                               color: Colors.amber,
                             ),
                             Text(
-                              '3.8',
+                              '${product.star}',
                               style: TextStyle(color: Colors.grey.shade600),
                             ),
                           ],

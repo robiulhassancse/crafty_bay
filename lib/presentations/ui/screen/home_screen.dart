@@ -1,8 +1,12 @@
 import 'dart:io';
 import 'package:crafty_bay/data/model/category/category_data.dart';
+import 'package:crafty_bay/data/model/category/product.dart';
 import 'package:crafty_bay/presentations/state_holder/category_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/home_slider_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/new_product_list_by_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/popular_list_by_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/special_product_list_by_controller.dart';
 import 'package:crafty_bay/presentations/ui/utility/assets_path.dart';
 import 'package:crafty_bay/presentations/ui/widgets/appbar_icon_button.dart';
 import 'package:crafty_bay/presentations/ui/widgets/category_item.dart';
@@ -90,11 +94,41 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 ),
                 SectionHeader(title: 'Popular', onTabSeeAll: (){}),
-                _buildProductCartList(),
+                GetBuilder<PopularListByRemarkController>(
+                  builder: (popularProductListController) {
+                    if(popularProductListController.popularProductListInProgress){
+                      return const SizedBox(
+                        height: 165,
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return _buildProductCartList(
+                      popularProductListController.popularProductList,
+                    );
+                  }
+                ),
                 SectionHeader(title: 'Special', onTabSeeAll: (){}),
-                _buildProductCartList(),
+                GetBuilder<SpecialProductListByController>(
+                  builder: (specialProductListController) {
+                    if(specialProductListController.specialProductListInProgress){
+                      return const SizedBox(height: 165,
+                      child: CircularProgressIndicator(),
+                      );
+                    }
+                    return _buildProductCartList(
+                      specialProductListController.specialProductList
+                    );
+                  }
+                ),
                 SectionHeader(title: 'New', onTabSeeAll: (){}),
-                _buildProductCartList(),
+                GetBuilder<NewProductListController>(
+                  builder: (newProductListController) {
+                    if(newProductListController.newProductListInProgress){
+                      return const SizedBox(height: 165,child: CircularProgressIndicator(),);
+                    }
+                    return _buildProductCartList(newProductListController.newProductList);
+                  }
+                ),
               ],
             ),
           ),
@@ -120,14 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildProductCartList() {
+  Widget _buildProductCartList(List<Product>productList) {
     return SizedBox(
               height: 165,
               child: ListView.separated(
-                  itemCount: 10,
+                  itemCount: productList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context,index){
-                return  const ProductCart();
+                return  ProductCart(product: productList[index],);
               }, separatorBuilder: (BuildContext context, int index) {
                     return const SizedBox(
                       width: 8,

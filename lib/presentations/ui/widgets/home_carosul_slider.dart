@@ -67,7 +67,7 @@ class _HomeCarosulSliderState extends State<HomeCarosulSlider> {
       options: CarouselOptions(
           height: 180.0,
           viewportFraction: 1,
-          autoPlay: false,
+          autoPlay: true,
           onPageChanged: (int index, _) {
             _selectedPageIndex.value = index;
           },

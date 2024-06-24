@@ -9,10 +9,10 @@ import 'package:get/get.dart';
 
 class CategoryController extends GetxController{
   bool _getCategoryInProgress = false;
-  String _message='';
+  String _errorMessage='';
   List<CategoryData> _categoryList = [];
   bool get getCategoryInProgress => _getCategoryInProgress;
-  String get message =>_message;
+  String get errorMessage =>_errorMessage;
 
   List<CategoryData> get categoryList => _categoryList;
 
@@ -24,7 +24,7 @@ class CategoryController extends GetxController{
     if(response.isSuccess){
       _categoryList = CategoryModel.fromJson(response.responseData).data ?? [];
     }else{
-      _message= response.errorMessage;
+      _errorMessage= response.errorMessage;
     }
     _getCategoryInProgress = false;
     update();
