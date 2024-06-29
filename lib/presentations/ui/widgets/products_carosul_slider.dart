@@ -3,7 +3,9 @@ import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class ProductCarosulSlider extends StatefulWidget {
-  const ProductCarosulSlider({super.key});
+  const ProductCarosulSlider({super.key, required this.images});
+
+  final List<String> images;
 
   @override
   State<ProductCarosulSlider> createState() => _ProductCarosulSliderState();
@@ -40,7 +42,7 @@ class _ProductCarosulSliderState extends State<ProductCarosulSlider> {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              for (int i = 0; i < 5; i++)
+              for (int i = 0; i < widget.images.length; i++)
                 Container(
                   height: 10,
                   width: 10,
@@ -69,20 +71,18 @@ class _ProductCarosulSliderState extends State<ProductCarosulSlider> {
             _selectedPageIndex.value = index;
           },
           autoPlayAnimationDuration: const Duration(seconds: 2)),
-      items: [1, 2, 3, 4, 5].map((i) {
+      items: widget.images.map((image) {
         return Builder(
           builder: (BuildContext context) {
             return Container(
                 width: MediaQuery.of(context).size.width,
                 color: Colors.grey.shade300,
                 alignment: Alignment.center,
-                child: Text(
-                  'text $i',
-                  style: const TextStyle(fontSize: 16.0),
-                ));
+                child: Image.network(image,fit: BoxFit.cover,));
           },
         );
       }).toList(),
     );
   }
 }
+

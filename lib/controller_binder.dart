@@ -3,6 +3,7 @@ import 'package:crafty_bay/presentations/state_holder/home_slider_controller.dar
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/new_product_list_by_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/popular_list_by_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/product_details_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/product_list_by_category_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/special_product_list_by_controller.dart';
 import 'package:get/get.dart';
@@ -17,6 +18,7 @@ class ControllerBinder extends Bindings{
     Get.put(PopularListByRemarkController());
     Get.put(SpecialProductListByController());
     Get.put(NewProductListController());
+    Get.put(ProductDetailsController());
 
   }
 

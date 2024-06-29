@@ -17,7 +17,7 @@ class ProductCart extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.offAll(()=> const ProductDetailsScreen());
+        Get.offAll(()=>  ProductDetailsScreen(productId: product.id!,));
       },
       child: SizedBox(
         width: 140,
