@@ -1,6 +1,8 @@
+import 'package:crafty_bay/presentations/state_holder/cart_list_controller.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:crafty_bay/presentations/ui/widgets/category_card_details.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CardListScreen extends StatefulWidget {
   const CardListScreen({super.key});
@@ -11,21 +13,33 @@ class CardListScreen extends StatefulWidget {
 
 class _CardListScreenState extends State<CardListScreen> {
   @override
+  void initState() {
+    super.initState();
+    Get.find<CartListController>().getCartItem();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 4,
-              itemBuilder: (context, index) {
-                return const CategoryCartList();
-              },
-            ),
-          ),
-          _buildStickyTotalPrice()
-        ],
+      body: GetBuilder<CartListController>(
+        builder: (cartListController) {
+          if(cartListController.getCartListInProgress){
+            return const Center(child: CircularProgressIndicator(),);
+          }
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  itemCount: cartListController.cartList.length,
+                  itemBuilder: (context, index) {
+                    return const CategoryCartList();
+                  },
+                ),
+              ),
+              _buildStickyTotalPrice()
+            ],
+          );
+        }
       ),
     );
   }

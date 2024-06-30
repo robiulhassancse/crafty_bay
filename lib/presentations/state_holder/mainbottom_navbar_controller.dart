@@ -8,13 +8,13 @@ class MainBottomNavBarController extends GetxController{
   int get selectedSlider => _selectedSlider;
 
   Future<void> changeIndex(int index) async{
-    if(index==2 || index ==3){
-      final isLoggedIn = await UserAuthController.checkLoggedInState();
-      if(!isLoggedIn){
-        Get.to(()=> const EmailVerificationScreen());
-        return;
-      }
-    }
+    // if(index==2 || index ==3){
+    //   final isLoggedIn = await UserAuthController.checkLoggedInState();
+    //   if(!isLoggedIn){
+    //     Get.to(()=> const EmailVerificationScreen());
+    //     return;
+    //   }
+    // }
     _selectedSlider = index;
     update();
   }

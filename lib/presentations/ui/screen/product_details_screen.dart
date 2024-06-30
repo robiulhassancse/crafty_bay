@@ -2,6 +2,7 @@ import 'package:crafty_bay/data/model/category/cart_model.dart';
 import 'package:crafty_bay/data/model/category/product_details_model.dart';
 import 'package:crafty_bay/presentations/state_holder/add_to_cart_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/add_to_wish_list_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/product_details_controller.dart';
 import 'package:crafty_bay/presentations/ui/screen/create_review_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
@@ -34,64 +35,71 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: GetBuilder<ProductDetailsController>(
-            builder: (productDetailsController) {
-              if (productDetailsController.productDetailsInProgress) {
-                return const Center(child: CircularProgressIndicator(),);
-              }
-              List<String> colors = productDetailsController.productDetailsModel.color?.split(',') ?? [];
-              List<String> sizes = productDetailsController.productDetailsModel.size?.split(',') ?? [];
-              _selectedColor= colors.first;
-              _selectedSize = sizes.first;
+      body: WillPopScope(
+        onWillPop: () async{
+          // Navigator.of(context).pop();
+          Get.find<MainBottomNavBarController>().backToHomeScreen();
+          return false;
+        },
+        child: SafeArea(
+          child: GetBuilder<ProductDetailsController>(
+              builder: (productDetailsController) {
+                if (productDetailsController.productDetailsInProgress) {
+                  return const Center(child: CircularProgressIndicator(),);
+                }
+                List<String> colors = productDetailsController.productDetailsModel.color?.split(',') ?? [];
+                List<String> sizes = productDetailsController.productDetailsModel.size?.split(',') ?? [];
+                _selectedColor= colors.first;
+                _selectedSize = sizes.first;
 
-              return Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          _buildProductDetailsSliderSection(
-                              productDetailsController.productDetailsModel),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8),
-                            child: Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  _buildTitleHeaderSection( productDetailsController.productDetailsModel),
-                                  _buildReviewSection(productDetailsController.productDetailsModel),
-                                  SizePicker(
-                                    sizes: colors,
-                                    onChange: (String s) {
-                                      _selectedColor = s;
-                                    },
-                                    isRounded: false,
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  SizePicker(
-                                    sizes: sizes,
-                                    onChange: (String s) {
-                                      _selectedSize = s;
-                                    },
-                                  ),
-                                  _buildProductDescriptions(productDetailsController.productDetailsModel),
-                                ],
+                return Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _buildProductDetailsSliderSection(
+                                productDetailsController.productDetailsModel),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8),
+                              child: Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    _buildTitleHeaderSection( productDetailsController.productDetailsModel),
+                                    _buildReviewSection(productDetailsController.productDetailsModel),
+                                    SizePicker(
+                                      sizes: colors,
+                                      onChange: (String s) {
+                                        _selectedColor = s;
+                                      },
+                                      isRounded: false,
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    SizePicker(
+                                      sizes: sizes,
+                                      onChange: (String s) {
+                                        _selectedSize = s;
+                                      },
+                                    ),
+                                    _buildProductDescriptions(productDetailsController.productDetailsModel),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  _buildBottomPriceCart(
-                      productDetailsController.productDetailsModel)
-                ],
-              );
-            }
+                    _buildBottomPriceCart(
+                        productDetailsController.productDetailsModel)
+                  ],
+                );
+              }
+          ),
         ),
       ),
     );
@@ -284,7 +292,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           title: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Get.find<MainBottomNavBarController>().backToHomeScreen();
+                },
                 icon: const Icon(
                   Icons.arrow_back_ios,
                   color: Colors.black54,
