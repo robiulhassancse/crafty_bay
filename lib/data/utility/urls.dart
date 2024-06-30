@@ -5,4 +5,7 @@ class Urls{
   static String getProductListByCategory(int categoryId) =>'$_baseUrl/ListProductByCategory/$categoryId';
   static String getProductListByRemark(String remark) =>'$_baseUrl/ListProductByRemark/$remark';
   static String getProductDetails(int productID) =>'$_baseUrl/ProductDetailsById/$productID';
+  static String getAddToCart ='$_baseUrl/CreateCartList';
+  static String getVerifyEmail(String email) =>'$_baseUrl/UserLogin/$email';
+  static String getVerifyOtp(String email,String otp) =>'$_baseUrl/VerifyLogin/$email/$otp';
 }

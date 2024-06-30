@@ -86,8 +86,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 GetBuilder<CategoryController>(
                   builder: (categoryController) {
                     if(categoryController.getCategoryInProgress){
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return const SizedBox(
+                        height: 110,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       );
                     }
                     return _buildCategoryItem(categoryController.categoryList);
@@ -99,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if(popularProductListController.popularProductListInProgress){
                       return const SizedBox(
                         height: 165,
-                        child: CircularProgressIndicator(),
+                        child: Center(child: CircularProgressIndicator()),
                       );
                     }
                     return _buildProductCartList(
@@ -112,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (specialProductListController) {
                     if(specialProductListController.specialProductListInProgress){
                       return const SizedBox(height: 165,
-                      child: CircularProgressIndicator(),
+                      child: Center(child: CircularProgressIndicator()),
                       );
                     }
                     return _buildProductCartList(
@@ -124,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 GetBuilder<NewProductListController>(
                   builder: (newProductListController) {
                     if(newProductListController.newProductListInProgress){
-                      return const SizedBox(height: 165,child: CircularProgressIndicator(),);
+                      return const SizedBox(height: 165,child: Center(child: CircularProgressIndicator()),);
                     }
                     return _buildProductCartList(newProductListController.newProductList);
                   }

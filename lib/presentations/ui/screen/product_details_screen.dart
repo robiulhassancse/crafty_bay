@@ -1,8 +1,9 @@
+import 'package:crafty_bay/data/model/category/cart_model.dart';
 import 'package:crafty_bay/data/model/category/product_details_model.dart';
+import 'package:crafty_bay/presentations/state_holder/add_to_cart_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/product_details_controller.dart';
 import 'package:crafty_bay/presentations/ui/screen/create_review_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
-import 'package:crafty_bay/presentations/ui/widgets/color_picker.dart';
 import 'package:crafty_bay/presentations/ui/widgets/custom_stepper.dart';
 import 'package:crafty_bay/presentations/ui/widgets/products_carosul_slider.dart';
 import 'package:crafty_bay/presentations/ui/widgets/size_picker.dart';
@@ -19,6 +20,9 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  int _counterValue =1;
+  String? _selectedColor;
+  String? _selectedSize;
 
   @override
   void initState() {
@@ -31,52 +35,67 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return Scaffold(
       body: SafeArea(
         child: GetBuilder<ProductDetailsController>(
-          builder: (productDetailsController) {
-            if(productDetailsController.productDetailsInProgress){
-              return const Center(child: CircularProgressIndicator(),);
-            }
+            builder: (productDetailsController) {
+              if (productDetailsController.productDetailsInProgress) {
+                return const Center(child: CircularProgressIndicator(),);
+              }
+              List<String> colors = productDetailsController.productDetailsModel.color?.split(',') ?? [];
+              List<String> sizes = productDetailsController.productDetailsModel.size?.split(',') ?? [];
+              _selectedColor= colors.first;
+              _selectedSize = sizes.first;
 
-            return Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        _buildProductDetailsSliderSection(productDetailsController.productDetailsModel),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8),
-                          child: Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildTitleHeaderSection(productDetailsController.productDetailsModel),
-                                _buildReviewSection(productDetailsController.productDetailsModel),
-                                SizePicker(
-                                  sizes: productDetailsController.productDetailsModel.color?.split(',') ?? [],
-                                  onChange: (String s) {  },
-                                  isRounded: false,
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                SizePicker(
-                                  sizes: productDetailsController.productDetailsModel.size?.split(',') ?? [],
-                                  onChange: (String s) {  },
-                                ),
-                                _buildProductDescriptions(productDetailsController.productDetailsModel),
-                              ],
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildProductDetailsSliderSection(
+                              productDetailsController.productDetailsModel),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8),
+                            child: Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildTitleHeaderSection(
+                                      productDetailsController
+                                          .productDetailsModel),
+                                  _buildReviewSection(productDetailsController
+                                      .productDetailsModel),
+                                  SizePicker(
+                                    sizes: colors,
+                                    onChange: (String s) {
+                                      _selectedColor = s;
+                                    },
+                                    isRounded: false,
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  SizePicker(
+                                    sizes: sizes,
+                                    onChange: (String s) {
+                                      _selectedSize = s;
+                                    },
+                                  ),
+                                  _buildProductDescriptions(
+                                      productDetailsController
+                                          .productDetailsModel),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                _buildBottomPriceCart(productDetailsController.productDetailsModel)
-              ],
-            );
-          }
+                  _buildBottomPriceCart(
+                      productDetailsController.productDetailsModel)
+                ],
+              );
+            }
         ),
       ),
     );
@@ -84,46 +103,62 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
   Widget _buildBottomPriceCart(ProductDetailsModel productDetails) {
     return Container(
-            height: 100,
-            decoration: BoxDecoration(
-              color: AppColors.primaryColor.withOpacity(0.15),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(16),
-                topRight: Radius.circular(16),
-              ),
+      height: 100,
+      decoration: BoxDecoration(
+        color: AppColors.primaryColor.withOpacity(0.15),
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Price', style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade700,
+                ),),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text('\$${productDetails.product?.price ?? 0}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.primaryColor,
+                  ),),
+              ],
             ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Price',style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey.shade700,
-                      ),),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                       Text('\$${productDetails.product?.price ?? 0}',style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.primaryColor,
-                      ),),
-                    ],
-                  ),
-                  SizedBox(
-                      width: 130,
-                      child: ElevatedButton(
-                          onPressed: () {}, child: const Text('Add to Cart')))
-                ],
-              ),
-            ),
-          );
+            SizedBox(
+                width: 130,
+                child: GetBuilder<AddToCartController>(
+                    builder: (addToCartController) {
+                      if (addToCartController.getAddToCartInProgress) {
+                        return const Center(
+                          child: CircularProgressIndicator(),);
+                      }
+                      return ElevatedButton(
+                          onPressed: () {
+                            CartModel cartModel = CartModel(
+                                productId: widget.productId,
+                                color: _selectedColor ?? '',
+                                size: _selectedSize ?? '',
+                                quantity: _counterValue);
+                            addToCartController.getAddToCart(cartModel);
+                          }, child: const Text('Add to Cart'));
+                    }
+                ))
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTitleHeaderSection(ProductDetailsModel productDetails) {
@@ -131,11 +166,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       children: [
         Expanded(
             child: Text(
-          productDetails.product!.title ?? '',
-          // 'Happy New Year Special Deal Save 30%',
-          style: const TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w500, letterSpacing: 0.9),
-        )),
+              productDetails.product!.title ?? '',
+              // 'Happy New Year Special Deal Save 30%',
+              style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.9),
+            )),
         CustomStepper(
             lowerLimit: 1,
             upperLimit: 10,
@@ -147,7 +184,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildProductDescriptions(ProductDetailsModel productDetails) {
-    return  Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
@@ -161,15 +198,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           height: 4,
         ),
         Text(
-            productDetails.product!.shortDes ?? '',style: TextStyle(
-          color: Colors.grey.shade600,
-          letterSpacing: 0.8
+          productDetails.product!.shortDes ?? '', style: TextStyle(
+            color: Colors.grey.shade600,
+            letterSpacing: 0.8
         ),),
         const SizedBox(
           height: 4,
         ),
         Text(
-          productDetails.des ?? '',style: TextStyle(
+          productDetails.des ?? '', style: TextStyle(
             color: Colors.grey.shade600,
             letterSpacing: 0.8
         ),),
@@ -180,7 +217,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget _buildReviewSection(ProductDetailsModel productDetails) {
     return Row(
       children: [
-         Wrap(
+        Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             const Icon(
@@ -195,7 +232,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         TextButton(
           onPressed: () {
-            Get.offAll(()=>const CreateReviewScreen());
+            Get.offAll(() => const CreateReviewScreen());
           },
           child: const Text(
             'Reviews',
@@ -220,12 +257,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       ],
     );
   }
-   // ProductDetailsModel productDetails = ProductDetailsModel();
+
+  // ProductDetailsModel productDetails = ProductDetailsModel();
 
   Widget _buildProductDetailsSliderSection(ProductDetailsModel productDetails) {
     return Stack(
       children: [
-         SizedBox(
+        SizedBox(
           height: 280,
           child: ProductCarosulSlider(images: [
             productDetails.img1 ?? '',
