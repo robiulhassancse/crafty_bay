@@ -8,4 +8,6 @@ class Urls{
   static String getAddToCart ='$_baseUrl/CreateCartList';
   static String getVerifyEmail(String email) =>'$_baseUrl/UserLogin/$email';
   static String getVerifyOtp(String email,String otp) =>'$_baseUrl/VerifyLogin/$email/$otp';
+  static String getAddToWishList(int productId) =>'$_baseUrl/CreateWishList/$productId';
+  static String getWishList ='$_baseUrl/ProductWishList';
 }

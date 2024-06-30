@@ -1,4 +1,5 @@
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/wish_list_controller.dart';
 import 'package:crafty_bay/presentations/ui/widgets/product_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,11 @@ class WishListScreen extends StatefulWidget {
 }
 
 class _WishListScreenState extends State<WishListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Get.find<WishListController>().getWishList();
+  }
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -60,18 +66,30 @@ class _WishListScreenState extends State<WishListScreen> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: GridView.builder(
-              itemCount: 9,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 8,
-              ),
-              itemBuilder: (context, index) {
-                // return const FittedBox(
-                //     child: ProductCart(
-                //   showAddToWishList: false,
-                // ));
-              }),
+          child: GetBuilder<WishListController>(
+            builder: (wishListController) {
+              if(wishListController.getWishListInProgress){
+                return const Center(child: CircularProgressIndicator(),);
+              }
+              return RefreshIndicator(
+                onRefresh: () async{
+                  wishListController.getWishList();
+                },
+                child: GridView.builder(
+                    itemCount: wishListController.wishList.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 8,
+                    ),
+                    itemBuilder: (context, index) {
+                      return FittedBox(
+                          child: ProductCart(
+                        showAddToWishList: false, product: wishListController.wishList[index].product!,
+                      ));
+                    }),
+              );
+            }
+          ),
         ),
       ),
     );

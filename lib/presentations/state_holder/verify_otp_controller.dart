@@ -2,6 +2,7 @@
 import 'package:crafty_bay/data/model/network_response.dart';
 import 'package:crafty_bay/data/network_caller/network_caller.dart';
 import 'package:crafty_bay/data/utility/urls.dart';
+import 'package:crafty_bay/presentations/state_holder/user_auth_controller.dart';
 import 'package:get/get.dart';
 
 class VerifyOtpController extends GetxController {
@@ -19,6 +20,7 @@ class VerifyOtpController extends GetxController {
     final NetworkResponse response = await NetworkCaller.getRequest(
         url: Urls.getVerifyOtp(email,otp));
     if (response.isSuccess) {
+      await UserAuthController.saveUserToken(response.responseData['data']);
       isSuccess = true;
     } else {
       _errorMessage = response.errorMessage;

@@ -1,3 +1,5 @@
+import 'package:crafty_bay/presentations/state_holder/user_auth_controller.dart';
+import 'package:crafty_bay/presentations/ui/screen/email_verification_screen.dart';
 import 'package:get/get.dart';
 
 class MainBottomNavBarController extends GetxController{
@@ -5,7 +7,14 @@ class MainBottomNavBarController extends GetxController{
 
   int get selectedSlider => _selectedSlider;
 
-  void changeIndex(int index){
+  Future<void> changeIndex(int index) async{
+    if(index==2 || index ==3){
+      final isLoggedIn = await UserAuthController.checkLoggedInState();
+      if(!isLoggedIn){
+        Get.to(()=> const EmailVerificationScreen());
+        return;
+      }
+    }
     _selectedSlider = index;
     update();
   }

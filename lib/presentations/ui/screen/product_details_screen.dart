@@ -1,6 +1,7 @@
 import 'package:crafty_bay/data/model/category/cart_model.dart';
 import 'package:crafty_bay/data/model/category/product_details_model.dart';
 import 'package:crafty_bay/presentations/state_holder/add_to_cart_controller.dart';
+import 'package:crafty_bay/presentations/state_holder/add_to_wish_list_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/product_details_controller.dart';
 import 'package:crafty_bay/presentations/ui/screen/create_review_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
@@ -59,11 +60,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  _buildTitleHeaderSection(
-                                      productDetailsController
-                                          .productDetailsModel),
-                                  _buildReviewSection(productDetailsController
-                                      .productDetailsModel),
+                                  _buildTitleHeaderSection( productDetailsController.productDetailsModel),
+                                  _buildReviewSection(productDetailsController.productDetailsModel),
                                   SizePicker(
                                     sizes: colors,
                                     onChange: (String s) {
@@ -80,9 +78,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       _selectedSize = s;
                                     },
                                   ),
-                                  _buildProductDescriptions(
-                                      productDetailsController
-                                          .productDetailsModel),
+                                  _buildProductDescriptions(productDetailsController.productDetailsModel),
                                 ],
                               ),
                             ),
@@ -239,20 +235,32 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
           ),
         ),
-        Card(
-          child: Container(
-            height: 20,
-            width: 20,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              color: AppColors.primaryColor,
-            ),
-            child: const Icon(
-              Icons.favorite_border,
-              size: 16,
-              color: Colors.white,
-            ),
-          ),
+        GetBuilder<AddToWishListController>(
+          builder: (addToWishListController) {
+            if(addToWishListController.getAddToWishListInProgress){
+              return const CircularProgressIndicator();
+            }
+            return InkWell(
+              onTap: (){
+                addToWishListController.getAddToWishList(widget.productId);
+              },
+              child: Card(
+                child: Container(
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: AppColors.primaryColor,
+                  ),
+                  child: const Icon(
+                    Icons.favorite_border,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            );
+          }
         )
       ],
     );
