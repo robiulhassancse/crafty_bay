@@ -7,13 +7,14 @@ class UserAuthController{
 
   static Future<void>saveUserToken(String token) async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    await sharedPreferences.setString(_tokenKey, 'token');
+    await sharedPreferences.setString(_tokenKey, token);
     accessToken = token;
   }
 
   static Future<String>getUserToken()async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? token = sharedPreferences.getString(_tokenKey);
+    accessToken = token ?? '';
     return accessToken;
   }
 

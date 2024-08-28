@@ -10,4 +10,10 @@ class Urls{
   static String getVerifyOtp(String email,String otp) =>'$_baseUrl/VerifyLogin/$email/$otp';
   static String getAddToWishList(int productId) =>'$_baseUrl/CreateWishList/$productId';
   static String getWishList ='$_baseUrl/ProductWishList';
+  static String getCreateProfile = '$_baseUrl/CreateProfile';
+  static String getReadProfile = '$_baseUrl/ReadProfile';
+  static String getCartList = '$_baseUrl/CartList';
+  static String getCreateReview = '$_baseUrl/CreateProductReview';
+  static String getListReviewByProduct(int productId) => '$_baseUrl/ListReviewByProduct/$productId';
+  static String getDeleteCartProductListProduct(int productId) => '$_baseUrl/DeleteCartList/$productId';
 }

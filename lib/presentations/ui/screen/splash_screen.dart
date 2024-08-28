@@ -1,3 +1,4 @@
+import 'package:crafty_bay/presentations/state_holder/user_auth_controller.dart';
 import 'package:crafty_bay/presentations/ui/screen/home_screen.dart';
 import 'package:crafty_bay/presentations/ui/screen/main_bottom_navbar_screen.dart';
 import 'package:crafty_bay/presentations/ui/screen/product_details_screen.dart';
@@ -18,11 +19,13 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _moveToNextScreen();
   }
-  
-  Future<void>_moveToNextScreen() async{
-    await Future.delayed(const Duration(seconds: 4)).then((value) => Get.offAll(()=> const MainBottomNavBarScreen()));
+
+  Future<void> _moveToNextScreen() async {
+    await Future.delayed(const Duration(seconds: 4));
+    await UserAuthController.getUserToken();
+         Get.offAll(() => const MainBottomNavBarScreen());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

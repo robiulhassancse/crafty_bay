@@ -1,3 +1,4 @@
+import 'package:crafty_bay/data/model/wish_list_model/wish_list_item.dart';
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/wish_list_controller.dart';
 import 'package:crafty_bay/presentations/ui/widgets/product_cart.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WishListScreen extends StatefulWidget {
-  const WishListScreen({super.key});
+  const WishListScreen({super.key,});
 
   @override
   State<WishListScreen> createState() => _WishListScreenState();

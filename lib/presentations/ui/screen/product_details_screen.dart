@@ -5,6 +5,7 @@ import 'package:crafty_bay/presentations/state_holder/add_to_wish_list_controlle
 import 'package:crafty_bay/presentations/state_holder/mainbottom_navbar_controller.dart';
 import 'package:crafty_bay/presentations/state_holder/product_details_controller.dart';
 import 'package:crafty_bay/presentations/ui/screen/create_review_screen.dart';
+import 'package:crafty_bay/presentations/ui/screen/main_bottom_navbar_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:crafty_bay/presentations/ui/widgets/custom_stepper.dart';
 import 'package:crafty_bay/presentations/ui/widgets/products_carosul_slider.dart';
@@ -22,7 +23,7 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  int _counterValue =1;
+  int _counterValue = 1;
   String? _selectedColor;
   String? _selectedSize;
 
@@ -36,7 +37,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: WillPopScope(
-        onWillPop: () async{
+        onWillPop: () async {
           // Navigator.of(context).pop();
           Get.find<MainBottomNavBarController>().backToHomeScreen();
           return false;
@@ -44,62 +45,73 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         child: SafeArea(
           child: GetBuilder<ProductDetailsController>(
               builder: (productDetailsController) {
-                if (productDetailsController.productDetailsInProgress) {
-                  return const Center(child: CircularProgressIndicator(),);
-                }
-                List<String> colors = productDetailsController.productDetailsModel.color?.split(',') ?? [];
-                List<String> sizes = productDetailsController.productDetailsModel.size?.split(',') ?? [];
-                _selectedColor= colors.first;
-                _selectedSize = sizes.first;
+            if (productDetailsController.productDetailsInProgress) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            List<String> colors = productDetailsController
+                    .productDetailsModel.color
+                    ?.split(',') ??
+                [];
+            List<String> sizes =
+                productDetailsController.productDetailsModel.size?.split(',') ??
+                    [];
+            _selectedColor = colors.first;
+            _selectedSize = sizes.first;
 
-                return Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            _buildProductDetailsSliderSection(
-                                productDetailsController.productDetailsModel),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8),
-                              child: Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    _buildTitleHeaderSection( productDetailsController.productDetailsModel),
-                                    _buildReviewSection(productDetailsController.productDetailsModel),
-                                    SizePicker(
-                                      sizes: colors,
-                                      onChange: (String s) {
-                                        _selectedColor = s;
-                                      },
-                                      isRounded: false,
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    SizePicker(
-                                      sizes: sizes,
-                                      onChange: (String s) {
-                                        _selectedSize = s;
-                                      },
-                                    ),
-                                    _buildProductDescriptions(productDetailsController.productDetailsModel),
-                                  ],
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildProductDetailsSliderSection(
+                            productDetailsController.productDetailsModel),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8),
+                          child: Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildTitleHeaderSection(
+                                    productDetailsController
+                                        .productDetailsModel),
+                                _buildReviewSection(productDetailsController
+                                    .productDetailsModel),
+                                SizePicker(
+                                  sizes: colors,
+                                  onChange: (String s) {
+                                    _selectedColor = s;
+                                  },
+                                  isRounded: false,
                                 ),
-                              ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                SizePicker(
+                                  sizes: sizes,
+                                  onChange: (String s) {
+                                    _selectedSize = s;
+                                  },
+                                ),
+                                _buildProductDescriptions(
+                                    productDetailsController
+                                        .productDetailsModel),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                    _buildBottomPriceCart(
-                        productDetailsController.productDetailsModel)
-                  ],
-                );
-              }
-          ),
+                  ),
+                ),
+                _buildBottomPriceCart(
+                    productDetailsController.productDetailsModel)
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -124,41 +136,67 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Price', style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey.shade700,
-                ),),
+                Text(
+                  'Price',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
                 const SizedBox(
                   height: 4,
                 ),
-                Text('\$${productDetails.product?.price ?? 0}',
+                Text(
+                  '\$${productDetails.product?.price ?? 0}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryColor,
-                  ),),
+                  ),
+                ),
               ],
             ),
             SizedBox(
                 width: 130,
                 child: GetBuilder<AddToCartController>(
                     builder: (addToCartController) {
-                      if (addToCartController.getAddToCartInProgress) {
-                        return const Center(
-                          child: CircularProgressIndicator(),);
-                      }
-                      return ElevatedButton(
-                          onPressed: () {
-                            CartModel cartModel = CartModel(
-                                productId: widget.productId,
-                                color: _selectedColor ?? '',
-                                size: _selectedSize ?? '',
-                                quantity: _counterValue);
-                            addToCartController.getAddToCart(cartModel);
-                          }, child: const Text('Add to Cart'));
-                    }
-                ))
+                  if (addToCartController.addToCartInProgress) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return ElevatedButton(
+                      onPressed: () {
+                        // CartModel cartModel = CartModel(
+                        //     productId: widget.productId,
+                        //     color: _selectedColor ?? '',
+                        //     size: _selectedSize ?? '',
+                        //     quantity: _counterValue);
+                        // addToCartController.getAddToCart(cartModel);
+
+                        Get.find<AddToCartController>().addToCart(
+                            productDetails.productId ?? 0,
+                            productDetails.color ?? '',
+                            productDetails.size ?? '',
+                            _counterValue).then((result) {
+                          if (result) {
+                            Get.snackbar('Success', 'Add to cart successful.',
+                                // backgroundColor: AppColors.greenColor,
+                                // colorText: AppColors.foregroundColor,
+                                borderRadius: 10,
+                                snackPosition: SnackPosition.BOTTOM);
+                          } else {
+                            Get.snackbar('Failed', 'Add to cart failed! Try again.',
+                                // backgroundColor: AppColors.alertColor,
+                                // colorText: AppColors.foregroundColor,
+                                borderRadius: 10,
+                                snackPosition: SnackPosition.BOTTOM);
+                          }
+                        });;
+                      },
+                      child: const Text('Add to Cart'));
+                }))
           ],
         ),
       ),
@@ -170,13 +208,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       children: [
         Expanded(
             child: Text(
-              productDetails.product!.title ?? '',
-              // 'Happy New Year Special Deal Save 30%',
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.9),
-            )),
+          productDetails.product!.title ?? '',
+          // 'Happy New Year Special Deal Save 30%',
+          style: const TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w500, letterSpacing: 0.9),
+        )),
         CustomStepper(
             lowerLimit: 1,
             upperLimit: 10,
@@ -202,18 +238,16 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           height: 4,
         ),
         Text(
-          productDetails.product!.shortDes ?? '', style: TextStyle(
-            color: Colors.grey.shade600,
-            letterSpacing: 0.8
-        ),),
+          productDetails.product!.shortDes ?? '',
+          style: TextStyle(color: Colors.grey.shade600, letterSpacing: 0.8),
+        ),
         const SizedBox(
           height: 4,
         ),
         Text(
-          productDetails.des ?? '', style: TextStyle(
-            color: Colors.grey.shade600,
-            letterSpacing: 0.8
-        ),),
+          productDetails.des ?? '',
+          style: TextStyle(color: Colors.grey.shade600, letterSpacing: 0.8),
+        ),
       ],
     );
   }
@@ -236,40 +270,41 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         TextButton(
           onPressed: () {
-            Get.offAll(() => const CreateReviewScreen());
+            Get.offAll(() => CreateReviewScreen(
+                  productId: widget.productId,
+                ));
           },
           child: const Text(
             'Reviews',
             style: TextStyle(color: AppColors.primaryColor, fontSize: 16),
           ),
         ),
-        GetBuilder<AddToWishListController>(
-          builder: (addToWishListController) {
-            if(addToWishListController.getAddToWishListInProgress){
-              return const CircularProgressIndicator();
-            }
-            return InkWell(
-              onTap: (){
-                addToWishListController.getAddToWishList(widget.productId);
-              },
-              child: Card(
-                child: Container(
-                  height: 20,
-                  width: 20,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: AppColors.primaryColor,
-                  ),
-                  child: const Icon(
-                    Icons.favorite_border,
-                    size: 16,
-                    color: Colors.white,
-                  ),
+        GetBuilder<AddToWishListController>(builder: (addToWishListController) {
+          if (addToWishListController.getAddToWishListInProgress) {
+            return const CircularProgressIndicator();
+          }
+          return InkWell(
+            onTap: () {
+              addToWishListController.getAddToWishList(widget.productId);
+            },
+            child: Card(
+              child: Container(
+                height: 20,
+                width: 20,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: AppColors.primaryColor,
+                ),
+                child: const Icon(
+                  Icons.favorite_border,
+                  // Icons.favorite_border,
+                  size: 16,
+                  color: Colors.white,
                 ),
               ),
-            );
-          }
-        )
+            ),
+          );
+        })
       ],
     );
   }
@@ -281,19 +316,22 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       children: [
         SizedBox(
           height: 280,
-          child: ProductCarosulSlider(images: [
-            productDetails.img1 ?? '',
-            productDetails.img2 ?? '',
-            productDetails.img3 ?? '',
-            productDetails.img4 ?? '',
-          ],),
+          child: ProductCarosulSlider(
+            images: [
+              productDetails.img1 ?? '',
+              productDetails.img2 ?? '',
+              productDetails.img3 ?? '',
+              productDetails.img4 ?? '',
+            ],
+          ),
         ),
         AppBar(
+          automaticallyImplyLeading: false,
           title: Row(
             children: [
               IconButton(
                 onPressed: () {
-                  Get.find<MainBottomNavBarController>().backToHomeScreen();
+                  Navigator.pop(context);
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
@@ -313,5 +351,3 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 }
-
-

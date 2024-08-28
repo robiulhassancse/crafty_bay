@@ -1,4 +1,7 @@
 import 'package:crafty_bay/data/model/category/product.dart';
+import 'package:crafty_bay/data/model/wish_list_model/wish_list_item.dart';
+import 'package:crafty_bay/data/model/wish_list_model/wish_list_model.dart';
+import 'package:crafty_bay/presentations/state_holder/delete_wish_list_product.dart';
 import 'package:crafty_bay/presentations/ui/screen/product_details_screen.dart';
 import 'package:crafty_bay/presentations/ui/utility/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -7,17 +10,22 @@ import 'package:get/get.dart';
 class ProductCart extends StatelessWidget {
   const ProductCart({
     super.key,
-    this.showAddToWishList = true, required this.product,
+    this.showAddToWishList = true,
+    required this.product,
   });
 
   final bool showAddToWishList;
   final Product product;
 
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.offAll(()=>  ProductDetailsScreen(productId: product.id!,));
+        Get.to(() =>
+            ProductDetailsScreen(
+              productId: product.id!,
+            ));
       },
       child: SizedBox(
         width: 140,
@@ -32,11 +40,11 @@ class ProductCart extends StatelessWidget {
                 width: 140,
                 height: 90,
                 decoration: BoxDecoration(
-                    color: AppColors.primaryColor.withOpacity(0.1),
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(8),
-                      topLeft: Radius.circular(8),
-                    ),
+                  color: AppColors.primaryColor.withOpacity(0.1),
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    topLeft: Radius.circular(8),
+                  ),
                 ),
                 child: Image.network(product.image ?? ''),
               ),
@@ -44,8 +52,8 @@ class ProductCart extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                     Text(
-                     product.title ?? '',
+                    Text(
+                      product.title ?? '',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -56,7 +64,7 @@ class ProductCart extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                         Text(
+                        Text(
                           '\$${product.price}',
                           style: const TextStyle(
                             color: AppColors.primaryColor,
@@ -76,7 +84,18 @@ class ProductCart extends StatelessWidget {
                             ),
                           ],
                         ),
-                        _builAddToWishCartButton()
+                        GetBuilder<DeleteProductListController>(
+                            builder: (deleteProductListController) {
+                              if (deleteProductListController
+                                  .deleteWishListInProgress) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              return _builAddToWishCartButton(
+                                 WishListItem()
+                              );
+                            })
                       ],
                     )
                   ],
@@ -89,10 +108,15 @@ class ProductCart extends StatelessWidget {
     );
   }
 
-  Visibility _builAddToWishCartButton() {
+  Visibility _builAddToWishCartButton(
+      WishListItem deleteWishProduct) {
     return Visibility(
       visible: showAddToWishList,
-      replacement: _getIconButton(Icons.delete_forever_outlined),
+      replacement:
+      GestureDetector(
+          onTap: (){
+            deleteWishProduct.productId;
+          }, child: _getIconButton(Icons.delete_forever_outlined)),
       child: _getIconButton(Icons.favorite_border),
     );
   }

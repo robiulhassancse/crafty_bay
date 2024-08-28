@@ -1,13 +1,26 @@
+import 'package:crafty_bay/data/model/review/product_review_model.dart';
+import 'package:crafty_bay/data/model/review/review_data.dart';
+import 'package:crafty_bay/presentations/state_holder/product_review_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class ReviewListScreen extends StatefulWidget {
-  const ReviewListScreen({super.key});
+  const ReviewListScreen({super.key, required this.productId});
+
+  final int productId;
 
   @override
   State<ReviewListScreen> createState() => _ReviewListScreenState();
 }
 
 class _ReviewListScreenState extends State<ReviewListScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    Get.find<ProductReviewController>().getProductReview(widget.productId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,15 +34,22 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
           ],
         ),
       ),
-      body:  ListView.builder(
-          itemCount: 4,
-          itemBuilder: (context,index){
-        return _buildReviewCard();
-      })
+      body:  GetBuilder<ProductReviewController>(
+        builder: (productReviewController) {
+          if(productReviewController.getProductReviewInProgress){
+            return const Center(child: CircularProgressIndicator(),);
+          }
+          return ListView.builder(
+              itemCount: productReviewController.reviewList.length,
+              itemBuilder: (context,index){
+            return _buildReviewCard(productReviewController.reviewList.first);
+          });
+        }
+      )
     );
   }
 
-  Padding _buildReviewCard() {
+  Padding _buildReviewCard(ReviewData productReview) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 4),
       child: Expanded(
@@ -49,14 +69,14 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                             child: const Icon(Icons.person,size: 20,color: Colors.grey,),
                           ),
                           const SizedBox(width: 8,),
-                           Text('Robiul Hassan',style: TextStyle(
+                           Text(productReview.profile?.cusName ?? '',style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.grey.shade700,
                           ),),
                         ],
                       ),
-                      const Text('''Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.''',style: TextStyle(
+                       Text(productReview.description ?? '',style: const TextStyle(
                         color: Colors.grey,
                       ),),
                       ],

@@ -30,7 +30,8 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
           title: Row(
             children: [
         IconButton(onPressed: (){
-          Get.find<MainBottomNavBarController>().backToHomeScreen();
+          // Get.find<MainBottomNavBarController>().backToHomeScreen();
+          Navigator.pop(context);
         },icon: const Icon(
         Icons.arrow_back_ios,color: Colors.black54,),),
               const Text('Category',style: TextStyle(fontSize: 20,color: Colors.black54),),

@@ -18,7 +18,7 @@ class VerifyOtpController extends GetxController {
     _getVerifyOtpInProgress = true;
     update();
     final NetworkResponse response = await NetworkCaller.getRequest(
-        url: Urls.getVerifyOtp(email,otp));
+        url: Urls.getVerifyOtp(email,otp),formAuth: true);
     if (response.isSuccess) {
       await UserAuthController.saveUserToken(response.responseData['data']);
       isSuccess = true;
